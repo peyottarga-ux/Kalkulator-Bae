@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Kalkulator Bae</title>
+<style>
+:root{--ink:#fff;--muted:#c9b8ee;--panel:#0d0817;--line:#3b2766;--chip:#f1e9ff;--chipink:#1a0b33;--on:#ffe14d;--onink:#21113f;--accent:#c084fc}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{font-family:"Trebuchet MS","Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#000 linear-gradient(90deg,#6d28d9 0%,#2a0f55 14%,#000 38%,#000 62%,#2a0f55 86%,#6d28d9 100%) fixed;padding:max(16px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inset-bottom))}
+.wrap{max-width:520px;margin:0 auto}
+.welcome{text-align:center;font-size:2rem;font-weight:800;letter-spacing:.04em;margin:6px 0 2px}
+.sub{text-align:center;color:var(--muted);margin:0 0 18px;font-size:1.05rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+h2{font-size:1rem;margin:0 0 10px;color:var(--accent)}
+label.f{display:block;font-size:.9rem;color:var(--muted);margin-bottom:6px}
+input[type=text]{width:100%;font:inherit;font-size:1.15rem;padding:13px 14px;border-radius:12px;border:2px solid var(--line);background:#150d26;color:#fff;outline:none}
+input[type=text]:focus{border-color:var(--accent)}
+.hint{font-size:.8rem;color:var(--muted);margin-top:6px;line-height:1.4}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.opt span{display:flex;justify-content:space-between;align-items:center;gap:6px;min-height:48px;padding:8px 12px;border-radius:12px;background:var(--chip);color:var(--chipink);font-weight:700;font-size:.92rem;border:2px solid transparent}
+.opt span b{font-size:.82rem;opacity:.75}
+.opt input:checked+span{background:var(--on);color:var(--onink);border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
+.opt input:focus-visible+span{outline:3px solid #fff}
+.opt.wide{grid-column:1/-1}
+.row{display:flex;gap:8px}
+.row>*{flex:1}
+.seg .opt span{justify-content:center}
+button.cek{width:100%;min-height:56px;border:0;border-radius:14px;font:inherit;font-size:1.2rem;font-weight:800;color:#1a0b33;background:linear-gradient(135deg,#ffe14d,#ff9ff3);cursor:pointer;box-shadow:0 6px 20px rgba(192,132,252,.45)}
+button.cek:active{transform:scale(.98)}
+.err{color:#ff8a8a;font-weight:700;margin-top:10px;display:none}
+#out{display:none}
+.big{font-size:1.25rem;font-weight:800;line-height:1.4;word-break:break-word}
+.big em{font-style:normal;color:var(--on)}
+dl{margin:12px 0 0;display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:.95rem}
+dt{color:var(--muted)}dd{margin:0;font-weight:700;text-align:right;word-break:break-word}
+hr{border:0;border-top:1px solid var(--line);margin:12px 0 4px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="welcome">Welcome</div>
+  <p class="sub">Kalkulator Bae</p>
+
+  <section class="card">
+    <h2>Income dasar per detik</h2>
+    <label class="f" for="inc">Angka + satuan</label>
+    <input id="inc" type="text" inputmode="text" autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="contoh: 50qa, 1.5qi, 250k">
+    <div class="hint">Satuan: k, m, b, t, qa, qi, sx, sp, oc, no, dc. Huruf besar/kecil sama saja.</div>
+  </section>
+
+  <section class="card">
+    <h2>Fence</h2>
+    <div class="grid" id="fence"></div>
+  </section>
+
+  <section class="card">
+    <h2>Tycoon</h2>
+    <div class="grid" id="tycoon"></div>
+  </section>
+
+  <section class="card">
+    <h2>Gamepass</h2>
+    <div class="grid">
+      <label class="opt"><input type="checkbox" id="vip"><span>VIP <b>+50%</b></span></label>
+      <label class="opt"><input type="checkbox" id="x2"><span>2x Money <b>×2</b></span></label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Critical Earner 3</h2>
+    <div class="grid">
+      <label class="opt"><input type="radio" name="pet" value="0" checked><span>Tanpa pet <b>0%</b></span></label>
+      <label class="opt"><input type="radio" name="pet" value="1"><span>1 pet <b>4%</b></span></label>
+      <label class="opt"><input type="radio" name="pet" value="2"><span>2 pet <b>8%</b></span></label>
+      <label class="opt"><input type="radio" name="pet" value="3"><span>3 pet <b>12%</b></span></label>
+      <label class="opt"><input type="radio" name="pet" value="4"><span>4 pet <b>16%</b></span></label>
+      <label class="opt"><input type="radio" name="pet" value="5"><span>5 pet <b>20%</b></span></label>
+    </div>
+    <div class="hint">Tiap pet +4% peluang Critical Hit, maksimal 5 pet. Saat crit, income jadi ×17.</div>
+  </section>
+
+  <section class="card">
+    <h2>Durasi</h2>
+    <div class="row">
+      <div>
+        <label class="f" for="dur">Lama waktu</label>
+        <input id="dur" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder="contoh: 5">
+      </div>
+      <div>
+        <label class="f">Satuan</label>
+        <div class="grid seg" style="grid-template-columns:1fr 1fr">
+          <label class="opt"><input type="radio" name="unit" value="jam" checked><span>Jam</span></label>
+          <label class="opt"><input type="radio" name="unit" value="hari"><span>Hari</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="hint">Contoh: 5 jam, 12 jam, 3 hari, 7 hari.</div>
+  </section>
+
+  <button class="cek" id="cek" type="button">Cek</button>
+  <div class="err" id="err" role="alert"></div>
+
+  <section class="card" id="out" style="margin-top:14px" aria-live="polite">
+    <div class="big" id="msg"></div>
+    <dl id="detail"></dl>
+  </section>
+</main>
+
+<script>
+(function(){
+  var FENCE=[["None",0],["Angelic",115],["Volcanic",150],["Royale",200],["Fairy",250],["Dragon",300],["Omega",400],["Pirate",500]];
+  var TYC=[["None",0],["Tycoon 1",10],["Tycoon 2",25],["Tycoon 3",50],["Tycoon 4",90],["Tycoon 5",150]];
+  var UNITS={"":0,k:3,m:6,b:9,t:12,qa:15,qi:18,sx:21,sp:24,oc:27,no:30,dc:33};
+  var ORDER=["dc","no","oc","sp","sx","qi","qa","t","b","m","k"];
+  var $=function(i){return document.getElementById(i)};
+
+  function build(id,list,name){
+    var h="";
+    list.forEach(function(x,i){
+      h+='<label class="opt"><input type="radio" name="'+name+'" value="'+i+'"'+(i===0?" checked":"")+'><span>'+x[0]+' <b>'+(x[1]?"+"+x[1]+"%":"0%")+'</b></span></label>';
+    });
+    $(id).innerHTML=h;
+  }
+  build("fence",FENCE,"fence");
+  build("tycoon",TYC,"tycoon");
+
+  function pow10(n){return BigInt(10)**BigInt(n)}
+
+  // "1.5qa" -> {num, den} (pecahan tepat, tanpa floating point)
+  function parseIncome(raw){
+    var s=raw.trim().toLowerCase().replace(/\s+/g,"").replace(/,/g,".");
+    if(!s) throw new Error("Isi dulu income dasarnya.");
+    var m=s.match(/^(\d+\.?\d*|\.\d+)([a-z]*)$/);
+    if(!m) throw new Error("Format income tidak valid. Contoh: 50qa, 1.5qi, 250k.");
+    if(!(m[2] in UNITS)) throw new Error('Satuan "'+m[2]+'" tidak dikenal. Pakai: k, m, b, t, qa, qi, sx, sp, oc, no, dc.');
+    var parts=m[1].split("."),f=parts[1]||"";
+    var n=BigInt((parts[0]||"")+f||"0");
+    if(n===BigInt(0)) throw new Error("Income harus lebih dari 0.");
+    return {num:n*pow10(UNITS[m[2]]),den:pow10(f.length)};
+  }
+
+  function parseDur(raw){
+    var s=raw.trim().replace(/,/g,".");
+    var m=s.match(/^(\d+\.?\d*|\.\d+)$/);
+    if(!m) throw new Error("Durasi harus berupa angka, contoh: 5 atau 1.5.");
+    var parts=m[1].split("."),f=parts[1]||"";
+    var n=BigInt((parts[0]||"")+f||"0");
+    if(n===BigInt(0)) throw new Error("Durasi harus lebih dari 0.");
+    return {num:n,den:pow10(f.length),text:(parts[0]||"0")+(f?"."+f:"")};
+  }
+
+  // pecahan -> teks dengan satuan, 2 desimal (dipotong, tidak dibulatkan naik)
+  function fmt(num,den){
+    var e=0,u="";
+    for(var i=0;i<ORDER.length;i++){
+      if(num>=den*pow10(UNITS[ORDER[i]])){e=UNITS[ORDER[i]];u=ORDER[i];break;}
+    }
+    var q=(num*BigInt(100))/(den*pow10(e));
+    var ip=(q/BigInt(100)).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
+    var fp=(q%BigInt(100)).toString();
+    while(fp.length<2) fp="0"+fp;
+    fp=fp.replace(/0+$/,"");
+    return ip+(fp?","+fp:"")+(u?" "+u:"");
+  }
+  function sel(name){return document.querySelector('input[name="'+name+'"]:checked')}
+
+  $("cek").addEventListener("click",function(){
+    var err=$("err"),out=$("out");
+    err.style.display="none";
+    try{
+      var inc=parseIncome($("inc").value);
+      var dur=parseDur($("dur").value);
+      var fence=FENCE[+sel("fence").value],tyc=TYC[+sel("tycoon").value];
+      var vip=$("vip").checked,x2=$("x2").checked;
+      var pets=+sel("pet").value;            // 0 sampai 5 pet
+      var chance=pets*4;                      // total peluang crit per detik, dalam %
+      var critPerMin=(chance*60/100).toFixed(1).replace(".",",").replace(/,0$/,"");
+      var unit=sel("unit").value,secs=unit==="hari"?86400:3600;
+
+      var bonus=fence[1]+tyc[1]+(vip?50:0);
+      // tiap detik ada peluang crit p; kalau crit income detik itu ×17
+      // => pengali rata-rata = (1-p)×1 + p×17 = 1 + 16p = (100 + 16×chance) / 100
+      var sNum=inc.num*BigInt(100+bonus)*BigInt(x2?2:1)*BigInt(100+16*chance);
+      var sDen=inc.den*BigInt(100)*BigInt(100);
+      var total=fmt(sNum*BigInt(secs)*dur.num,sDen*dur.den);
+
+      $("msg").innerHTML="Yeey mendapatkan <em>"+total+"</em> dalam "+dur.text+" "+unit+"!";
+      var rows=[
+        ["Fence",fence[0]+(fence[1]?" (+"+fence[1]+"%)":" (0%)")],
+        ["Tycoon",tyc[0]+(tyc[1]?" (+"+tyc[1]+"%)":" (0%)")],
+        ["VIP",vip?"Aktif (+50%)":"Tidak aktif"],
+        ["Total bonus","+"+bonus+"% (×"+(1+bonus/100)+")"],
+        ["2x Money",x2?"Aktif (×2)":"Tidak aktif (×1)"],
+        ["Critical Earner 3",pets?pets+" pet (peluang crit "+chance+"%, ×17)":"Tanpa pet (×1)"],
+        ["Perkiraan crit per menit",critPerMin+" kali"],
+        ["Pengali crit rata-rata","×"+(1+16*chance/100).toFixed(2).replace(".",",")],
+        ["HR","" ],
+        ["Income per detik (rata-rata)",fmt(sNum,sDen)],
+        ["Income per menit",fmt(sNum*BigInt(60),sDen)],
+        ["Income per jam",fmt(sNum*BigInt(3600),sDen)],
+        ["Income per hari",fmt(sNum*BigInt(86400),sDen)]
+      ];
+      $("detail").innerHTML=rows.map(function(r){
+        return r[0]==="HR"?'<hr style="grid-column:1/-1">':"<dt>"+r[0]+"</dt><dd>"+r[1]+"</dd>";
+      }).join("");
+      out.style.display="block";
+      out.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }catch(e){
+      out.style.display="none";
+      err.textContent=e.message;
+      err.style.display="block";
+    }
+  });
+})();
+</script>
+</body>
+</html>
